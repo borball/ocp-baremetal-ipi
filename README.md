@@ -27,6 +27,9 @@ This repo is designed to deploy a Red Hat OpenShift cluster with IPI method on a
 
 git clone https://github.com/borball/ocp-baremetal-ipi.git
 cd ocp-baremetal-ipi
+
+#Update config.cfg before running setup.sh
+
 ./setup.sh
 ```
 
