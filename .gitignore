@@ -1,0 +1,10 @@
+*.iso
+openshift-install
+kubectl
+*.tar.gz
+*.tgz
+kubeadmin-password
+kubeconfig
+pullsecret.json
+.idea
+*.iml
