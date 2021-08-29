@@ -4,8 +4,6 @@ BIN_PATH=${BASEDIR}/bin
 ASSETS_PATH=${BASEDIR}/assets
 CLUSTER_PATH=${BASEDIR}/${cluster_name}
 
-echo "nameserver 192.168.10.100" >> /etc/resolv.conf
-
 if [[ -z ${ASSETS_PATH}/install-config.yaml ]]
 then
   echo "Could not find install-config.yaml in folder ${ASSETS_PATH}, something must be wrong."

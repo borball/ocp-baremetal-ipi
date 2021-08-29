@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dnf install -y libvirt-devel gcc python3-devel net-tools podman jq ipmitool mkisofs tmux make bash-completion
+dnf install -y libvirt-devel gcc python3-devel net-tools podman jq ipmitool mkisofs tmux make bash-completion bind-utils
 
 export CRYPTOGRAPHY_DONT_BUILD_RUST=1
 pip3 install -U pip

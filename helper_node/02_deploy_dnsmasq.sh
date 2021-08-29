@@ -82,3 +82,6 @@ restorecon -v /opt/dnsmasq-${cluster_name}/hosts.leases
 systemctl daemon-reload
 
 systemctl enable dnsmasq-${cluster_name} --now
+
+echo "nameserver 192.168.10.100" > /etc/resolv.conf
+
