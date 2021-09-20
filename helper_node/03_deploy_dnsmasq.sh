@@ -10,6 +10,8 @@ dnf install dnsmasq -y
 
 mkdir -p /opt/dnsmasq-${cluster_name}/
 
+HOSTNAME=$(hostname -f)
+
 cat <<EOF > /opt/dnsmasq-${cluster_name}/dnsmasq.conf
 strict-order
 bind-dynamic
@@ -47,6 +49,9 @@ ptr-record=110.10.168.192.in-addr.arpa.,"openshift-worker-2.${cluster_name}.${ba
 dhcp-hostsfile=/opt/dnsmasq-${cluster_name}/hosts.hostsfile
 dhcp-leasefile=/opt/dnsmasq-${cluster_name}/hosts.leases
 
+# Registry
+host-record=${HOSTNAME},192.168.10.100
+
 EOF
 
 cat <<EOF > /opt/dnsmasq-${cluster_name}/hosts.hostsfile
@@ -61,7 +66,6 @@ EOF
 cat <<EOF > /opt/dnsmasq-${cluster_name}/upstream-resolv.conf
 nameserver ${dns_server}
 EOF
-
 
 cat <<EOF > /etc/systemd/system/dnsmasq-${cluster_name}.service
 [Unit]
