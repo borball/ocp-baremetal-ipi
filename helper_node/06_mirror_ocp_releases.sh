@@ -1,10 +1,5 @@
 #!/bin/bash
 
-BIN_PATH=${BASEDIR}/bin
-ASSETS_PATH=${BASEDIR}/assets
-CLUSTER_PATH=${BASEDIR}/${cluster_name}
-LOCAL_SECRET_JSON=${ASSETS_PATH}/pull_secret.json
-
 UPSTREAM_REGISTRY=quay.io
 PRODUCT_REPO=openshift-release-dev
 RELEASE_NAME=ocp-release

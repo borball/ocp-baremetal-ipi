@@ -26,7 +26,6 @@ ${BASEDIR}/00_download_ocp.sh
 ${BASEDIR}/01_create_virt_network.sh
 ${BASEDIR}/02_create_helper_vm.sh
 ${BASEDIR}/03_create_empty_vms.sh
-${BASEDIR}/04_init_install_config.sh
 
 while [[ ! $(ssh -o BatchMode=yes -o ConnectTimeout=5 192.168.10.100 echo connected 2>&1) =~ "connected" ]]; do
 	sleep 5

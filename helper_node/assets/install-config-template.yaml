@@ -25,6 +25,8 @@ platform:
     provisioningNetwork: "Disabled"
     apiVIP: 192.168.10.103
     ingressVIP: 192.168.10.102
+    bootstrapOSImage: http://192.168..10.100:9000/QEMUIMAGE
+    clusterOSImage: http://192.168..10.100:9000/OSTACKIMAGE
     hosts:
       - name: openshift-master-0
         role: master
@@ -93,5 +95,16 @@ platform:
         bootMode: "legacy"
         rootDeviceHints:
           deviceName: "/dev/vda"
+imageContentSources:
+  - mirrors:
+      - REGISTRYHOSTNAME:5000/ocp4
+      - REGISTRYHOSTNAME:5000/ocp4/release
+    source: quay.io/openshift-release-dev/ocp-release
+  - mirrors:
+      - REGISTRYHOSTNAME:5000/ocp4
+      - REGISTRYHOSTNAME:5000/ocp4/release
+    source: quay.io/openshift-release-dev/ocp-v4.0-art-dev
+additionalTrustBundle: |
+  REGISTRYCA
 pullSecret: 'PULLSECRET'
 sshKey: 'SSHPUBKEY'
