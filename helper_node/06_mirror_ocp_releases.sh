@@ -5,6 +5,8 @@ PRODUCT_REPO=openshift-release-dev
 RELEASE_NAME=ocp-release
 LOCAL_REGISTRY=$(hostname -f):5000
 
+OCP_RELEASE=$(curl -v --silent https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/latest/release.txt --stderr - |grep ^Name: |awk '{ print $2 }')
+
 # Login into podman registry
 podman login $(hostname -f):5000 -u kni -p kni --authfile ${LOCAL_SECRET_JSON}
 
