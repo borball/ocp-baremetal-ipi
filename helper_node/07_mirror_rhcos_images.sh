@@ -14,3 +14,5 @@ if [[ ! -f /opt/httpd/${QEMU_IMAGE_FILE} ]]
 then
   curl -Lk ${QEMU_IMAGE} -o /opt/httpd/${QEMU_IMAGE_FILE}
 fi
+
+systemctl restart podman-httpd
