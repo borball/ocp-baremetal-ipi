@@ -19,8 +19,6 @@ dnf install kcli -y
 source ${BASEDIR}/config.cfg
 
 export HELPER_NODE_PATH=${BASEDIR}/helper_node
-export ASSETS_PATH=${HELPER_NODE_PATH}/assets
-export INSTALL_CONFIG_FILE=${ASSETS_PATH}/install-config.yaml
 
 ${BASEDIR}/00_download_ocp.sh
 ${BASEDIR}/01_create_virt_network.sh
