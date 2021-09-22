@@ -32,7 +32,7 @@ while [[ ! $(ssh -o BatchMode=yes -o ConnectTimeout=5 192.168.10.100 echo connec
 	echo "Waiting for helper node coming up..."
 done
 
-${BASEDIR}/05_helper_node_files.sh
+${BASEDIR}/04_helper_node_files.sh
 
 ssh-keyscan -H 192.168.10.100 >> ~/.ssh/known_hosts
 ssh 192.168.10.100 "ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1"
