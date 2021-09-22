@@ -4,6 +4,7 @@ BIN_PATH=${HELPER_NODE_PATH}/bin
 TEMP_PATH=${HELPER_NODE_PATH}/temp
 LOCAL_SECRET_JSON=${BASEDIR}/pull_secret.json
 
+rm -rf ${BIN_PATH} ${TEMP_PATH}
 mkdir -p ${BIN_PATH} ${TEMP_PATH}
 
 if [ ! -f ${TEMP_PATH}/oc-client.tar.gz ]
