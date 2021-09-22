@@ -16,9 +16,4 @@ cp ${ASSETS_PATH}/MC/* ${CLUSTER_PATH}/openshift/
 
 ${BIN_PATH}/openshift-baremetal-install --dir ${CLUSTER_PATH} --log-level debug create cluster
 
-echo "export KUBECONFIG=/root/${cluster_name}-installer/${cluster_name}/auth/kubeconfig" >> ~/.bash_profile
-cp ${BIN_PATH}/oc /usr/local/bin/
-
-source ~/.bash_profile
-
 oc get clusterversion
