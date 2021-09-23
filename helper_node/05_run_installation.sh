@@ -1,6 +1,5 @@
 #!/bin/bash
 
-BIN_PATH=${BASEDIR}/bin
 ASSETS_PATH=${BASEDIR}/assets
 CLUSTER_PATH=${BASEDIR}/${cluster_name}
 
