@@ -10,6 +10,6 @@ sed -i "s|PULLSECRET|$(cat ${BASEDIR}/pull_secret.json | jq '.' -c)|" ${INSTALL_
 # Get redfish endpoints for every node
 for node in master0 master1 master2 worker0 worker1 worker2
 do
-  VMID=$(ssh 192.168.10.1 kcli info vm ${cluster_name}-${node} -f id -v)
+  VMID=$(kcli info vm ${cluster_name}-${node} -f id -v)
   sed -i "s/${node}id/${VMID}/" ${INSTALL_CONFIG_FILE}
 done
