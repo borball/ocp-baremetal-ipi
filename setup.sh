@@ -9,7 +9,7 @@ then
 fi
 
 ### Install basic tools start ###
-dnf install -y libvirt libvirt-daemon-driver-qemu qemu-kvm git rsync
+dnf install -y libvirt libvirt-daemon-driver-qemu qemu-kvm git rsync jq
 usermod -aG qemu,libvirt $(id -un)
 systemctl enable --now libvirtd
 dnf copr enable karmab/kcli -y
