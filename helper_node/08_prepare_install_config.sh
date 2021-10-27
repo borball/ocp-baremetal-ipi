@@ -9,7 +9,7 @@ sed -i "s|BASEDOMAIN|${base_domain}|" ${INSTALL_CONFIG_FILE}
 sed -i "s|CLUSTERNAME|${cluster_name}|" ${INSTALL_CONFIG_FILE}
 
 # Get redfish endpoints for every node
-for node in master0 master1 master2 worker0 worker1 worker2
+for node in master0 master1 master2
 do
   VMID=$(ssh 192.168.10.1 kcli info vm ${cluster_name}-${node} -f id -v)
   sed -i "s/${node}id/${VMID}/" ${INSTALL_CONFIG_FILE}
