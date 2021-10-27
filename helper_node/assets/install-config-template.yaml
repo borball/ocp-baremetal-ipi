@@ -12,7 +12,7 @@ metadata:
   name: CLUSTERNAME
 compute:
 - name: worker
-  replicas: 3
+  replicas: 0
 controlPlane:
   name: master
   replicas: 3
@@ -59,39 +59,6 @@ platform:
           password: ADMIN
           disableCertificateVerification: True
         bootMACAddress: DE:AD:BE:FF:00:07
-        bootMode: "legacy"
-        rootDeviceHints:
-          deviceName: "/dev/vda"
-      - name: openshift-worker-0
-        role: master
-        bmc:
-          address: redfish-virtualmedia://192.168.10.100:8080/redfish/v1/Systems/worker0id
-          username: ADMIN
-          password: ADMIN
-          disableCertificateVerification: True
-        bootMACAddress: DE:AD:BE:FF:00:08
-        bootMode: "legacy"
-        rootDeviceHints:
-          deviceName: "/dev/vda"
-      - name: openshift-worker-1
-        role: master
-        bmc:
-          address: redfish-virtualmedia://192.168.10.100:8080/redfish/v1/Systems/worker1id
-          username: ADMIN
-          password: ADMIN
-          disableCertificateVerification: True
-        bootMACAddress: DE:AD:BE:FF:00:09
-        bootMode: "legacy"
-        rootDeviceHints:
-          deviceName: "/dev/vda"
-      - name: openshift-worker-2
-        role: master
-        bmc:
-          address: redfish-virtualmedia://192.168.10.100:8080/redfish/v1/Systems/worker2id
-          username: ADMIN
-          password: ADMIN
-          disableCertificateVerification: True
-        bootMACAddress: DE:AD:BE:FF:00:10
         bootMode: "legacy"
         rootDeviceHints:
           deviceName: "/dev/vda"
