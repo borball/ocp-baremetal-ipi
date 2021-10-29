@@ -18,6 +18,11 @@ dnf install kcli -y
 
 source ${BASEDIR}/config.cfg
 
+#ocp full version x.y.z, reading from https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/${OCP_RELEASE}/release.txt
+export OCP_RELEASE_FULL=$(curl -s https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/${OCP_RELEASE}/release.txt | grep 'Pull From: quay.io' | awk -F ' ' '{print $3}')
+shortversion=${OCP_RELEASE_FULL%.*}
+export OCP_RELEASE_SHORT=$(printenv shortversion)
+
 export HELPER_NODE_PATH=${BASEDIR}/helper_node
 
 ${BASEDIR}/00_download_ocp.sh
