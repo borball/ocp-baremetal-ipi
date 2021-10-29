@@ -8,6 +8,8 @@ pip3 install python-ironicclient --ignore-installed PyYAML
 
 echo "export KUBECONFIG=/root/${cluster_name}-installer/${cluster_name}/auth/kubeconfig" >> ~/.bash_profile
 cp ${BIN_PATH}/oc /usr/local/bin/
+cp ${BIN_PATH}/openshift-baremetal-install /usr/local/bin/
+cp ${BIN_PATH}/opm /usr/local/bin/
 
 source ~/.bash_profile
 

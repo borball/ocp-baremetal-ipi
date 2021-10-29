@@ -9,6 +9,7 @@ export ASSETS_PATH=${BASEDIR}/assets
 export CLUSTER_PATH=${BASEDIR}/${cluster_name}
 export LOCAL_SECRET_JSON=${ASSETS_PATH}/pull_secret.json
 
+dnf install -y jq
 export OCP_RELEASE=$(${BASEDIR}/bin/oc version -o json  --client | jq -r '.releaseClientVersion')
 
 ${BASEDIR}/00_install_basic_tools.sh
