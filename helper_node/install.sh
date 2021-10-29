@@ -4,13 +4,12 @@ export BASEDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 source ${BASEDIR}/config.cfg
 
-#ocp full version x.y.z, reading from https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/${OCP_RELEASE}/release.txt
-export OCP_RELEASE_FULL=$(curl -s https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/${OCP_RELEASE}/release.txt | grep 'Pull From: quay.io' | awk -F ' ' '{print $3}')
-
 export BIN_PATH=${BASEDIR}/bin
 export ASSETS_PATH=${BASEDIR}/assets
 export CLUSTER_PATH=${BASEDIR}/${cluster_name}
 export LOCAL_SECRET_JSON=${ASSETS_PATH}/pull_secret.json
+
+export OCP_RELEASE=$(${BASEDIR}/bin/oc version -o json  --client | jq -r '.releaseClientVersion')
 
 ${BASEDIR}/00_install_basic_tools.sh
 ${BASEDIR}/01_deploy_sushy_tools.sh
