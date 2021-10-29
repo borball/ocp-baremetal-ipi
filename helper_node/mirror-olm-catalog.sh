@@ -4,7 +4,7 @@ BASEDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 export OCP_RELEASE=$(oc version -o json  --client | jq -r '.releaseClientVersion')
 export LOCAL_REGISTRY=$(hostname -f):5000
-export LOCAL_SECRET_JSON=${BASEDIR}/pull_secret.json
+export REGISTRY_AUTH_FILE=${BASEDIR}/pull_secret.json
 export RELEASE_NAME="ocp-release"
 export ARCHITECTURE=x86_64
 export REDHAT_DEFAULT_REGISTRY=registry.redhat.io
@@ -32,7 +32,7 @@ certified_operator(){
       -p ${packages[certified_operator]} \
       -t ${LOCAL_REGISTRY}/${indices[certified_operator]}:v${OCP_RELEASE_SHORT}
 
-  podman push ${LOCAL_REGISTRY}/${indices[certified_operator]}:v${OCP_RELEASE_SHORT} --authfile=${LOCAL_SECRET_JSON}
+  podman push ${LOCAL_REGISTRY}/${indices[certified_operator]}:v${OCP_RELEASE_SHORT}
 
   # Create CatalogSource
   oc apply -f - <<EOF
@@ -52,7 +52,7 @@ EOF
   oc adm catalog mirror \
       ${LOCAL_REGISTRY}/${indices[certified_operator]}:v${OCP_RELEASE_SHORT} \
       ${LOCAL_REGISTRY}/olm \
-      -a ${LOCAL_SECRET_JSON} \
+      -a ${REGISTRY_AUTH_FILE} \
       --max-components=5 \
       --to-manifests=certified-operator-index/
 
@@ -60,8 +60,8 @@ EOF
     oc apply -f certified-operator-index/imageContentSourcePolicy.yaml
   else
       oc image mirror \
+        -a ${REGISTRY_AUTH_FILE} \
         --skip-multiple-scopes=true \
-        -a ${LOCAL_SECRET_JSON} \
         -f certified-operator-index/mapping.txt
   fi
 
@@ -74,7 +74,7 @@ redhat_operator(){
       -p ${packages[redhat_operator]} \
       -t ${LOCAL_REGISTRY}/${indices[redhat_operator]}:v${OCP_RELEASE_SHORT}
 
-  podman push ${LOCAL_REGISTRY}/${indices[redhat_operator]}:v${OCP_RELEASE_SHORT} --authfile=${LOCAL_SECRET_JSON}
+  podman push ${LOCAL_REGISTRY}/${indices[redhat_operator]}:v${OCP_RELEASE_SHORT}
 
 # Create CatalogSource
 oc apply -f - <<EOF
@@ -94,7 +94,7 @@ EOF
   oc adm catalog mirror \
       ${LOCAL_REGISTRY}/${indices[redhat_operator]}:v${OCP_RELEASE_SHORT} \
       ${LOCAL_REGISTRY}/olm \
-      -a ${LOCAL_SECRET_JSON} \
+      -a ${REGISTRY_AUTH_FILE} \
       --max-components=5 \
       --to-manifests=redhat-operator-index/
 
@@ -103,7 +103,7 @@ EOF
   else
       oc image mirror \
         --skip-multiple-scopes=true \
-        -a ${LOCAL_SECRET_JSON} \
+        -a ${REGISTRY_AUTH_FILE} \
         -f redhat-operator-index/mapping.txt
   fi
 }
@@ -115,7 +115,7 @@ community_operator(){
       -p ${packages[community_operator]} \
       -t ${LOCAL_REGISTRY}/${indices[community_operator]}:v${OCP_RELEASE_SHORT}
 
-  podman push ${LOCAL_REGISTRY}/${indices[community_operator]}:v${OCP_RELEASE_SHORT} --authfile=${LOCAL_SECRET_JSON}
+  podman push ${LOCAL_REGISTRY}/${indices[community_operator]}:v${OCP_RELEASE_SHORT}
 
 # Create CatalogSource
 oc apply -f - <<EOF
@@ -135,7 +135,7 @@ EOF
   oc adm catalog mirror \
       ${LOCAL_REGISTRY}/${indices[community_operator]}:v${OCP_RELEASE_SHORT} \
       ${LOCAL_REGISTRY}/olm \
-      -a ${LOCAL_SECRET_JSON} \
+      -a ${REGISTRY_AUTH_FILE} \
       --max-components=5 \
       --to-manifests=community-operator-index/
 
@@ -144,7 +144,7 @@ EOF
   else
       oc image mirror \
         --skip-multiple-scopes=true \
-        -a ${LOCAL_SECRET_JSON} \
+        -a ${REGISTRY_AUTH_FILE} \
         -f community-operator-index/mapping.txt
   fi
 
