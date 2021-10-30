@@ -4,22 +4,28 @@ BASEDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 export OCP_RELEASE=$(oc version -o json  --client | jq -r '.releaseClientVersion')
 export LOCAL_REGISTRY=$(hostname -f):5000
+export LOCAL_REGISTRY_OLM=$(hostname -f):5000/olm
 export REGISTRY_AUTH_FILE=${BASEDIR}/pull_secret.json
 export RELEASE_NAME="ocp-release"
 export ARCHITECTURE=x86_64
 export REDHAT_DEFAULT_REGISTRY=registry.redhat.io
+export OCP_RELEASE_SHORT=${OCP_RELEASE%\.*}
 
-declare -A indices
-indices["certified_operator"]="redhat/certified-operator-index"
-indices["redhat_operator"]="redhat/redhat-operator-index"
-indices["community_operator"]="redhat/community-operator-index"
+declare -A remote_index
+remote_index["certified_operator"]="${REDHAT_DEFAULT_REGISTRY}/redhat/certified-operator-index:v${OCP_RELEASE_SHORT}"
+remote_index["redhat_operator"]="${REDHAT_DEFAULT_REGISTRY}/redhat/redhat-operator-index:v${OCP_RELEASE_SHORT}"
+remote_index["community_operator"]="${REDHAT_DEFAULT_REGISTRY}/redhat/community-operator-index:v${OCP_RELEASE_SHORT}"
+
+declare -A local_index
+local_index["certified_operator"]="${LOCAL_REGISTRY}/olm-index/certified-operator-index:v${OCP_RELEASE_SHORT}"
+local_index["redhat_operator"]="${LOCAL_REGISTRY}/olm-index/redhat-operator-index:v${OCP_RELEASE_SHORT}"
+local_index["community_operator"]="${LOCAL_REGISTRY}/olm-index/community-operator-index:v${OCP_RELEASE_SHORT}"
 
 declare -A packages
 packages["certified_operator"]="local-storage-operator,ocs-operator,performance-addon-operator,ptp-operator,sriov-network-operator,advanced-cluster-management,performance-addon-operator,openshift-gitops-operator"
 packages["redhat_operator"]="sriov-fec,n3000"
 packages["community_operator"]="hive-operator"
 
-OCP_RELEASE_SHORT=${OCP_RELEASE%\.*}
 
 # Disable all default CatalogSource
 oc patch OperatorHub cluster --type json -p '[{"op": "add", "path": "/spec/disableAllDefaultSources", "value": true}]'
@@ -27,12 +33,8 @@ oc patch OperatorHub cluster --type json -p '[{"op": "add", "path": "/spec/disab
 # certified-operator
 certified_operator(){
   # build index
-  opm index prune \
-      -f ${REDHAT_DEFAULT_REGISTRY}/${indices[certified_operator]}:v${OCP_RELEASE_SHORT} \
-      -p ${packages[certified_operator]} \
-      -t ${LOCAL_REGISTRY}/${indices[certified_operator]}:v${OCP_RELEASE_SHORT}
-
-  podman push ${LOCAL_REGISTRY}/${indices[certified_operator]}:v${OCP_RELEASE_SHORT}
+  opm index prune -f ${remote_index[certified_operator]} -p ${packages[certified_operator]} -t ${local_index[certified_operator]}
+  podman push ${local_index[certified_operator]}
 
   # Create CatalogSource
   oc apply -f - <<EOF
@@ -43,15 +45,15 @@ metadata:
   namespace: openshift-marketplace
 spec:
   displayName: Certified Operators Mirror
-  image: ${LOCAL_REGISTRY}/${indices[certified_operator]}:v${OCP_RELEASE_SHORT}
+  image: ${local_index[certified_operator]}
   publisher: Red Hat
   sourceType: grpc
 EOF
 
   # mirror images
   oc adm catalog mirror \
-      ${LOCAL_REGISTRY}/${indices[certified_operator]}:v${OCP_RELEASE_SHORT} \
-      ${LOCAL_REGISTRY}/olm \
+      ${local_index[certified_operator]} \
+      ${LOCAL_REGISTRY_OLM} \
       -a ${REGISTRY_AUTH_FILE} \
       --max-components=5 \
       --to-manifests=certified-operator-index/
@@ -69,31 +71,28 @@ EOF
 
 # redhat-operator
 redhat_operator(){
-  opm index prune \
-      -f ${REDHAT_DEFAULT_REGISTRY}/${indices[redhat_operator]}:v${OCP_RELEASE_SHORT} \
-      -p ${packages[redhat_operator]} \
-      -t ${LOCAL_REGISTRY}/${indices[redhat_operator]}:v${OCP_RELEASE_SHORT}
+  # build index
+  opm index prune -f ${remote_index[redhat_operator]} -p ${packages[redhat_operator]} -t ${local_index[redhat_operator]}
+  podman push ${local_index[redhat_operator]}
 
-  podman push ${LOCAL_REGISTRY}/${indices[redhat_operator]}:v${OCP_RELEASE_SHORT}
-
-# Create CatalogSource
-oc apply -f - <<EOF
+  # Create CatalogSource
+  oc apply -f - <<EOF
 apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
 metadata:
   name: redhat-operators-mirror
   namespace: openshift-marketplace
 spec:
-  displayName: Red Hat Operators Mirror
-  image: ${LOCAL_REGISTRY}/${indices[redhat_operator]}:v${OCP_RELEASE_SHORT}
+  displayName: RedHat Operators Mirror
+  image: ${local_index[redhat_operator]}
   publisher: Red Hat
   sourceType: grpc
 EOF
 
   # mirror images
   oc adm catalog mirror \
-      ${LOCAL_REGISTRY}/${indices[redhat_operator]}:v${OCP_RELEASE_SHORT} \
-      ${LOCAL_REGISTRY}/olm \
+      ${local_index[redhat_operator]} \
+      ${LOCAL_REGISTRY_OLM} \
       -a ${REGISTRY_AUTH_FILE} \
       --max-components=5 \
       --to-manifests=redhat-operator-index/
@@ -102,23 +101,20 @@ EOF
     oc apply -f redhat-operator-index/imageContentSourcePolicy.yaml
   else
       oc image mirror \
-        --skip-multiple-scopes=true \
         -a ${REGISTRY_AUTH_FILE} \
+        --skip-multiple-scopes=true \
         -f redhat-operator-index/mapping.txt
   fi
 }
 
 # community-operator
 community_operator(){
-  opm index prune \
-      -f ${REDHAT_DEFAULT_REGISTRY}/${indices[community_operator]}:v${OCP_RELEASE_SHORT} \
-      -p ${packages[community_operator]} \
-      -t ${LOCAL_REGISTRY}/${indices[community_operator]}:v${OCP_RELEASE_SHORT}
+  # build index
+  opm index prune -f ${remote_index[community_operator]} -p ${packages[community_operator]} -t ${local_index[community_operator]}
+  podman push ${local_index[community_operator]}
 
-  podman push ${LOCAL_REGISTRY}/${indices[community_operator]}:v${OCP_RELEASE_SHORT}
-
-# Create CatalogSource
-oc apply -f - <<EOF
+  # Create CatalogSource
+  oc apply -f - <<EOF
 apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
 metadata:
@@ -126,15 +122,15 @@ metadata:
   namespace: openshift-marketplace
 spec:
   displayName: Community Operators Mirror
-  image: ${LOCAL_REGISTRY}/${indices[community_operator]}:v${OCP_RELEASE_SHORT}
+  image: ${local_index[community_operator]}
   publisher: Red Hat
   sourceType: grpc
 EOF
 
   # mirror images
   oc adm catalog mirror \
-      ${LOCAL_REGISTRY}/${indices[community_operator]}:v${OCP_RELEASE_SHORT} \
-      ${LOCAL_REGISTRY}/olm \
+      ${local_index[community_operator]} \
+      ${LOCAL_REGISTRY_OLM} \
       -a ${REGISTRY_AUTH_FILE} \
       --max-components=5 \
       --to-manifests=community-operator-index/
@@ -143,11 +139,10 @@ EOF
     oc apply -f community-operator-index/imageContentSourcePolicy.yaml
   else
       oc image mirror \
-        --skip-multiple-scopes=true \
         -a ${REGISTRY_AUTH_FILE} \
+        --skip-multiple-scopes=true \
         -f community-operator-index/mapping.txt
   fi
-
 }
 
 certified_operator
