@@ -6,8 +6,6 @@ export OCP_RELEASE=$(oc version -o json  --client | jq -r '.releaseClientVersion
 export LOCAL_REGISTRY=$(hostname -f):5000
 export LOCAL_REGISTRY_OLM=$(hostname -f):5000/olm
 export REGISTRY_AUTH_FILE=${BASEDIR}/pull_secret.json
-export RELEASE_NAME="ocp-release"
-export ARCHITECTURE=x86_64
 export REDHAT_DEFAULT_REGISTRY=registry.redhat.io
 export OCP_RELEASE_SHORT=${OCP_RELEASE%\.*}
 
@@ -22,8 +20,8 @@ local_index["redhat_operator"]="${LOCAL_REGISTRY}/olm-index/redhat-operator-inde
 local_index["community_operator"]="${LOCAL_REGISTRY}/olm-index/community-operator-index:v${OCP_RELEASE_SHORT}"
 
 declare -A packages
-packages["certified_operator"]="local-storage-operator,ocs-operator,performance-addon-operator,ptp-operator,sriov-network-operator,advanced-cluster-management,performance-addon-operator,openshift-gitops-operator"
-packages["redhat_operator"]="sriov-fec,n3000"
+packages["redhat_operator"]="local-storage-operator,ocs-operator,performance-addon-operator,ptp-operator,sriov-network-operator,advanced-cluster-management,performance-addon-operator,openshift-gitops-operator"
+packages["certified_operator"]="sriov-fec,n3000"
 packages["community_operator"]="hive-operator"
 
 
@@ -33,11 +31,13 @@ oc patch OperatorHub cluster --type json -p '[{"op": "add", "path": "/spec/disab
 # certified-operator
 certified_operator(){
   # build index
-  opm index prune -f ${remote_index[certified_operator]} -p ${packages[certified_operator]} -t ${local_index[certified_operator]}
-  podman push ${local_index[certified_operator]}
+  opm index prune --from-index ${remote_index[certified_operator]} --packages ${packages[certified_operator]} --tag ${local_index[certified_operator]}
+  GODEBUG=x509ignoreCN=0 podman push ${local_index[certified_operator]}
+  # mirror images
+  GODEBUG=x509ignoreCN=0 oc adm catalog mirror ${local_index[certified_operator]} ${LOCAL_REGISTRY_OLM} -a ${REGISTRY_AUTH_FILE} --max-components=5 --to-manifests=certified-operator-index/
 
   # Create CatalogSource
-  oc apply -f - <<EOF
+  cat > certified-operator-index/catalogSource.yaml << EOF
 apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
 metadata:
@@ -50,71 +50,51 @@ spec:
   sourceType: grpc
 EOF
 
-  # mirror images
-  oc adm catalog mirror \
-      ${local_index[certified_operator]} \
-      ${LOCAL_REGISTRY_OLM} \
-      -a ${REGISTRY_AUTH_FILE} \
-      --max-components=5 \
-      --to-manifests=certified-operator-index/
-
-  if [ -s certified-operator-index/imageContentSourcePolicy.yaml ]; then
-    oc apply -f certified-operator-index/imageContentSourcePolicy.yaml
-  else
-      oc image mirror \
-        -a ${REGISTRY_AUTH_FILE} \
-        --skip-multiple-scopes=true \
-        -f certified-operator-index/mapping.txt
-  fi
+  echo ""
+  echo "To apply the Red Hat Operators catalog mirror configuration to your cluster, do the following once per cluster:"
+  echo "oc apply -f ./certified-operator-index/imageContentSourcePolicy.yaml"
+  echo "oc apply -f ./certified-operator-index/catalogSource.yaml"
 
 }
 
 # redhat-operator
 redhat_operator(){
   # build index
-  opm index prune -f ${remote_index[redhat_operator]} -p ${packages[redhat_operator]} -t ${local_index[redhat_operator]}
-  podman push ${local_index[redhat_operator]}
+  opm index prune --from-index ${remote_index[redhat_operator]} --packages ${packages[redhat_operator]} --tag ${local_index[redhat_operator]}
+  GODEBUG=x509ignoreCN=0 podman push ${local_index[redhat_operator]}
+  # mirror images
+  GODEBUG=x509ignoreCN=0 oc adm catalog mirror ${local_index[redhat_operator]} ${LOCAL_REGISTRY_OLM} -a ${REGISTRY_AUTH_FILE} --max-components=5 --to-manifests=redhat-operator-index/
 
   # Create CatalogSource
-  oc apply -f - <<EOF
+  cat > redhat-operator-index/catalogSource.yaml << EOF
 apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
 metadata:
   name: redhat-operators-mirror
   namespace: openshift-marketplace
 spec:
-  displayName: RedHat Operators Mirror
+  displayName: Red Hat Operators Mirror
   image: ${local_index[redhat_operator]}
   publisher: Red Hat
   sourceType: grpc
 EOF
 
-  # mirror images
-  oc adm catalog mirror \
-      ${local_index[redhat_operator]} \
-      ${LOCAL_REGISTRY_OLM} \
-      -a ${REGISTRY_AUTH_FILE} \
-      --max-components=5 \
-      --to-manifests=redhat-operator-index/
-
-  if [ -s redhat-operator-index/imageContentSourcePolicy.yaml ]; then
-    oc apply -f redhat-operator-index/imageContentSourcePolicy.yaml
-  else
-      oc image mirror \
-        -a ${REGISTRY_AUTH_FILE} \
-        --skip-multiple-scopes=true \
-        -f redhat-operator-index/mapping.txt
-  fi
+  echo ""
+  echo "To apply the Red Hat Operators catalog mirror configuration to your cluster, do the following once per cluster:"
+  echo "oc apply -f ./redhat-operator-index/imageContentSourcePolicy.yaml"
+  echo "oc apply -f ./redhat-operator-index/catalogSource.yaml"
 }
 
 # community-operator
 community_operator(){
   # build index
-  opm index prune -f ${remote_index[community_operator]} -p ${packages[community_operator]} -t ${local_index[community_operator]}
-  podman push ${local_index[community_operator]}
+  opm index prune --from-index ${remote_index[community_operator]} --packages ${packages[community_operator]} --tag ${local_index[community_operator]}
+  GODEBUG=x509ignoreCN=0 podman push ${local_index[community_operator]}
+  # mirror images
+  GODEBUG=x509ignoreCN=0 oc adm catalog mirror ${local_index[community_operator]} ${LOCAL_REGISTRY_OLM} -a ${REGISTRY_AUTH_FILE} --max-components=5 --to-manifests=community-operator-index/
 
   # Create CatalogSource
-  oc apply -f - <<EOF
+  cat > community-operator-index/catalogSource.yaml << EOF
 apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
 metadata:
@@ -127,22 +107,10 @@ spec:
   sourceType: grpc
 EOF
 
-  # mirror images
-  oc adm catalog mirror \
-      ${local_index[community_operator]} \
-      ${LOCAL_REGISTRY_OLM} \
-      -a ${REGISTRY_AUTH_FILE} \
-      --max-components=5 \
-      --to-manifests=community-operator-index/
-
-  if [ -s community-operator-index/imageContentSourcePolicy.yaml ]; then
-    oc apply -f community-operator-index/imageContentSourcePolicy.yaml
-  else
-      oc image mirror \
-        -a ${REGISTRY_AUTH_FILE} \
-        --skip-multiple-scopes=true \
-        -f community-operator-index/mapping.txt
-  fi
+  echo ""
+  echo "To apply the Red Hat Operators catalog mirror configuration to your cluster, do the following once per cluster:"
+  echo "oc apply -f ./community-operator-index/imageContentSourcePolicy.yaml"
+  echo "oc apply -f ./community-operator-index/catalogSource.yaml"
 }
 
 certified_operator
