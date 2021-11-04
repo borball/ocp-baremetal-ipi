@@ -31,7 +31,7 @@ oc patch OperatorHub cluster --type json -p '[{"op": "add", "path": "/spec/disab
 # certified-operator
 certified_operator(){
   # build index
-  opm index prune --from-index ${remote_index[certified_operator]} --packages ${packages[certified_operator]} --tag ${local_index[certified_operator]}
+  opm index prune --from-index ${remote_index[certified_operator]} --packages ${packages[certified_operator]} --tag ${local_index[certified_operator]} --permissive
   GODEBUG=x509ignoreCN=0 podman push ${local_index[certified_operator]}
   # mirror images
   GODEBUG=x509ignoreCN=0 oc adm catalog mirror ${local_index[certified_operator]} ${LOCAL_REGISTRY_OLM} -a ${REGISTRY_AUTH_FILE} --max-components=5 --to-manifests=certified-operator-index/
@@ -59,7 +59,7 @@ EOF
 # redhat-operator
 redhat_operator(){
   # build index
-  opm index prune --from-index ${remote_index[redhat_operator]} --packages ${packages[redhat_operator]} --tag ${local_index[redhat_operator]}
+  opm index prune --from-index ${remote_index[redhat_operator]} --packages ${packages[redhat_operator]} --tag ${local_index[redhat_operator]} --permissive
   GODEBUG=x509ignoreCN=0 podman push ${local_index[redhat_operator]}
   # mirror images
   GODEBUG=x509ignoreCN=0 oc adm catalog mirror ${local_index[redhat_operator]} ${LOCAL_REGISTRY_OLM} -a ${REGISTRY_AUTH_FILE} --max-components=5 --to-manifests=redhat-operator-index/
@@ -86,7 +86,7 @@ EOF
 # community-operator
 community_operator(){
   # build index
-  opm index prune --from-index ${remote_index[community_operator]} --packages ${packages[community_operator]} --tag ${local_index[community_operator]}
+  opm index prune --from-index ${remote_index[community_operator]} --packages ${packages[community_operator]} --tag ${local_index[community_operator]} --permissive
   GODEBUG=x509ignoreCN=0 podman push ${local_index[community_operator]}
   # mirror images
   GODEBUG=x509ignoreCN=0 oc adm catalog mirror ${local_index[community_operator]} ${LOCAL_REGISTRY_OLM} -a ${REGISTRY_AUTH_FILE} --max-components=5 --to-manifests=community-operator-index/
