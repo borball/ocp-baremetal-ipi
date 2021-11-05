@@ -23,7 +23,7 @@ This repo is designed to deploy a Red Hat OpenShift cluster with IPI method on a
 
 git clone https://github.com/borball/ocp-baremetal-ipi.git
 cd ocp-baremetal-ipi
-
+git checkout disconnected-3
 #Update config.cfg before running setup.sh, especially for the dns server.
 
 ./setup.sh
@@ -50,6 +50,12 @@ NAME                 STATUS   ROLES    AGE   VERSION
 openshift-master-0   Ready    master,worker   11h   v1.22.0-rc.0+ef241fd
 openshift-master-1   Ready    master,worker   11h   v1.22.0-rc.0+ef241fd
 openshift-master-2   Ready    master,worker   11h   v1.22.0-rc.0+ef241fd
+```
+
+### Olm Catalog Mirror
+
+```shell
+./mirror-olm-catalog.sh
 ```
 
 ### Cleanup
