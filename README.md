@@ -12,6 +12,10 @@ This repo is designed to deploy a Red Hat OpenShift cluster with IPI method on a
   - openshift-master-0: 192.168.10.105
   - openshift-master-0: 192.168.10.106
   - openshift-master-0: 192.168.10.107
+- Workers:
+  - openshift-worker-0: 192.168.10.108
+  - openshift-worker-1: 192.168.10.109
+  - openshift-worker-2: 192.168.10.110   
 - API VIP: 192.168.10.103
 - Ingress VIP: 192.168.10.102
 - Base Domain: virtual.cluster.lab
@@ -23,7 +27,7 @@ This repo is designed to deploy a Red Hat OpenShift cluster with IPI method on a
 
 git clone https://github.com/borball/ocp-baremetal-ipi.git
 cd ocp-baremetal-ipi
-git checkout disconnected-3
+git checkout disconnected
 #Update config.cfg before running setup.sh, especially for the dns server.
 
 ./setup.sh
@@ -47,9 +51,12 @@ version   4.8.5     True        False         9h      Cluster version is 4.8.5
 
 # oc get nodes
 NAME                 STATUS   ROLES    AGE   VERSION
-openshift-master-0   Ready    master,worker   11h   v1.22.0-rc.0+ef241fd
-openshift-master-1   Ready    master,worker   11h   v1.22.0-rc.0+ef241fd
-openshift-master-2   Ready    master,worker   11h   v1.22.0-rc.0+ef241fd
+openshift-master-0   Ready    master   11h   v1.22.0-rc.0+ef241fd
+openshift-master-1   Ready    master   11h   v1.22.0-rc.0+ef241fd
+openshift-master-2   Ready    master   11h   v1.22.0-rc.0+ef241fd
+openshift-worker-0   Ready    worker   11h   v1.22.0-rc.0+ef241fd
+openshift-worker-1   Ready    worker   11h   v1.22.0-rc.0+ef241fd
+openshift-worker-2   Ready    worker   11h   v1.22.0-rc.0+ef241fd
 ```
 
 ### Olm Catalog Mirror
