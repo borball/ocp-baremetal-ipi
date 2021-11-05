@@ -68,3 +68,7 @@ On the host:
 
 All the VMs and network will be deleted so nothing left on the host.
 
+### Other Deployment
+
+- [OCP disconnected IPv4 with 3 control plane and 3 worker nodes](https://github.com/borball/ocp-baremetal-ipi/tree/disconnected)
+- [OCP disconnected IPv4 with 3 control plane](https://github.com/borball/ocp-baremetal-ipi/tree/disconnected-3)
