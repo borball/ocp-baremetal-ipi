@@ -33,7 +33,7 @@ SUSHY_EMULATOR_SSL_KEY = u'/opt/sushy-tools/sushy.key'
 SUSHY_EMULATOR_OS_CLOUD = None
 
 # The libvirt URI to use. This option enables libvirt driver.
-SUSHY_EMULATOR_LIBVIRT_URI = u'qemu+ssh://root@192.168.10.1/system'
+SUSHY_EMULATOR_LIBVIRT_URI = u'qemu+ssh://root@192.168.200.1/system'
 
 # Workaround for BZ by @alosadagrande - 20.05.2021
 # https://bugzilla.redhat.com/show_bug.cgi?id=1957387

@@ -5,19 +5,14 @@ This repo is designed to deploy a Red Hat OpenShift cluster with IPI method on a
 <img src="ocp-ipi.svg" width=90% >
 
 - Host: RHEL8, 32 cores, 128G RAM
-- BareMetal Network: 192.168.10.0/24
-- Helper VM: 192.168.10.100, CentOS8
+- BareMetal Network: 192.168.200.0/24
+- Helper VM: 192.168.200.100, CentOS8
 - Bootstrap Node: Dynamic IP
 - Control Plane:
-  - openshift-master-0: 192.168.10.105
-  - openshift-master-0: 192.168.10.106
-  - openshift-master-0: 192.168.10.107
-- Workers:
-  - openshift-worker-0: 192.168.10.108
-  - openshift-worker-1: 192.168.10.109
-  - openshift-worker-2: 192.168.10.110
-- API VIP: 192.168.10.103
-- Ingress VIP: 192.168.10.102
+  - openshift-master-0: 192.168.200.105
+  - openshift-master-0: 192.168.200.106
+  - openshift-master-0: 192.168.200.107
+- Ingress VIP: 192.168.200.102
 - Base Domain: virtual.cluster.lab
 - Cluster Name: ocp4
 
@@ -54,9 +49,6 @@ NAME                 STATUS   ROLES    AGE   VERSION
 openshift-master-0   Ready    master   11h   v1.21.1+9807387
 openshift-master-1   Ready    master   11h   v1.21.1+9807387
 openshift-master-2   Ready    master   11h   v1.21.1+9807387
-openshift-worker-0   Ready    worker   10h   v1.21.1+9807387
-openshift-worker-1   Ready    worker   10h   v1.21.1+9807387
-openshift-worker-2   Ready    worker   10h   v1.21.1+9807387
 ```
 
 ### Cleanup
