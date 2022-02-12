@@ -74,5 +74,5 @@ systemctl daemon-reload
 
 systemctl enable dnsmasq-${cluster_name} --now
 
-echo "nameserver 192.168.200.1" > /etc/resolv.conf
+sed -i '1i nameserver 192.168.200.100' /etc/resolv.conf
 
