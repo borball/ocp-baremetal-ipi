@@ -2,7 +2,7 @@ apiVersion: v1
 baseDomain: BASEDOMAIN
 networking:
   networkType: OVNKubernetes
-  machineCIDR: 192.168.200.0/24
+  machineCIDR: 192.168.58.0/24
   clusterNetwork:
   - cidr: 10.128.0.0/14
     hostPrefix: 24
@@ -21,15 +21,15 @@ controlPlane:
 platform:
   baremetal:
     externalBridge: EXTERNAL_BRIDGE
-    libvirtURI: qemu+ssh://root@192.168.200.1/system
+    libvirtURI: qemu+ssh://root@192.168.58.1/system
     provisioningNetwork: "Disabled"
-    apiVIP: 192.168.200.103
-    ingressVIP: 192.168.200.102
+    apiVIP: 192.168.58.103
+    ingressVIP: 192.168.58.102
     hosts:
       - name: openshift-master-0
         role: master
         bmc:
-          address: redfish-virtualmedia://192.168.200.100:8080/redfish/v1/Systems/master0id
+          address: redfish-virtualmedia://192.168.58.14:8080/redfish/v1/Systems/master0id
           username: ADMIN
           password: ADMIN
           disableCertificateVerification: True
@@ -41,7 +41,7 @@ platform:
       - name: openshift-master-1
         role: master
         bmc:
-          address: redfish-virtualmedia://192.168.200.100:8080/redfish/v1/Systems/master1id
+          address: redfish-virtualmedia://192.168.58.14:8080/redfish/v1/Systems/master1id
           username: ADMIN
           password: ADMIN
           disableCertificateVerification: True
@@ -52,7 +52,7 @@ platform:
       - name: openshift-master-2
         role: master
         bmc:
-          address: redfish-virtualmedia://192.168.200.100:8080/redfish/v1/Systems/master2id
+          address: redfish-virtualmedia://192.168.58.14:8080/redfish/v1/Systems/master2id
           username: ADMIN
           password: ADMIN
           disableCertificateVerification: True

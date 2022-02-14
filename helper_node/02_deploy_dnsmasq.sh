@@ -16,25 +16,25 @@ bind-dynamic
 bogus-priv
 dhcp-authoritative
 # DHCP Range ${cluster_name}
-dhcp-range=${cluster_name},192.168.200.100,192.168.200.250,24
-dhcp-option=${cluster_name},option:dns-server,192.168.200.100
-dhcp-option=${cluster_name},option:router,192.168.200.1
+dhcp-range=${cluster_name},192.168.58.20,192.168.58.126,25
+dhcp-option=${cluster_name},option:dns-server,192.168.58.15
+dhcp-option=${cluster_name},option:router,192.168.58.1
 
 resolv-file=/opt/dnsmasq-${cluster_name}/upstream-resolv.conf
 except-interface=lo
 dhcp-lease-max=81
 log-dhcp
 
-domain=${cluster_name}.${base_domain},192.168.200.0/24,local
+domain=${cluster_name}.${base_domain},192.168.58.0/25,local
 
 # static host-records
-address=/apps.${cluster_name}.${base_domain}/192.168.200.102
-host-record=api.${cluster_name}.${base_domain},192.168.200.103
-host-record=openshift-master-0.${cluster_name}.${base_domain},192.168.200.105
+address=/apps.${cluster_name}.${base_domain}/192.168.58.102
+host-record=api.${cluster_name}.${base_domain},192.168.58.103
+host-record=openshift-master-0.${cluster_name}.${base_domain},192.168.58.21
 ptr-record=105.10.168.192.in-addr.arpa.,"openshift-master-0.${cluster_name}.${base_domain}"
-host-record=openshift-master-1.${cluster_name}.${base_domain},192.168.200.106
+host-record=openshift-master-1.${cluster_name}.${base_domain},192.168.58.22
 ptr-record=106.10.168.192.in-addr.arpa.,"openshift-master-1.${cluster_name}.${base_domain}"
-host-record=openshift-master-2.${cluster_name}.${base_domain},192.168.200.107
+host-record=openshift-master-2.${cluster_name}.${base_domain},192.168.58.23
 ptr-record=107.10.168.192.in-addr.arpa.,"openshift-master-2.${cluster_name}.${base_domain}"
 
 # DHCP Reservations
@@ -44,9 +44,9 @@ dhcp-leasefile=/opt/dnsmasq-${cluster_name}/hosts.leases
 EOF
 
 cat <<EOF > /opt/dnsmasq-${cluster_name}/hosts.hostsfile
-de:ad:be:ff:00:05,openshift-master-0,192.168.200.105
-de:ad:be:ff:00:06,openshift-master-1,192.168.200.106
-de:ad:be:ff:00:07,openshift-master-2,192.168.200.107
+de:ad:be:ff:00:05,openshift-master-0,192.168.58.21
+de:ad:be:ff:00:06,openshift-master-1,192.168.58.22
+de:ad:be:ff:00:07,openshift-master-2,192.168.58.23
 EOF
 
 cat <<EOF > /opt/dnsmasq-${cluster_name}/upstream-resolv.conf
@@ -74,5 +74,5 @@ systemctl daemon-reload
 
 systemctl enable dnsmasq-${cluster_name} --now
 
-sed -i '1i nameserver 192.168.200.100' /etc/resolv.conf
+sed -i '1i nameserver 192.168.58.15' /etc/resolv.conf
 
