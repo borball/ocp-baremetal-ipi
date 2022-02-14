@@ -190,4 +190,5 @@ EOF
 systemctl daemon-reload
 systemctl enable --now sushy-tools
 
+sleep 5
 curl -k https://127.0.0.1:8080/redfish/v1/Systems/
