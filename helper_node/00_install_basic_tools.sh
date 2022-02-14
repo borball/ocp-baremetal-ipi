@@ -1,7 +1,5 @@
 #!/bin/bash
 
-sed -i -e "s|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g" /etc/yum.repos.d/CentOS-*
-
 dnf install -y libvirt-devel gcc python3-devel net-tools podman jq ipmitool mkisofs tmux make bash-completion bind-utils
 
 export CRYPTOGRAPHY_DONT_BUILD_RUST=1
