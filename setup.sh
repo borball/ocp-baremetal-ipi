@@ -37,7 +37,7 @@ ${BASEDIR}/05_helper_node_files.sh
 
 ssh-keyscan -H 192.168.58.15 >> ~/.ssh/known_hosts
 ssh 192.168.58.15 "ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1"
-ssh 192.168.58.15 "ssh-keyscan -H 192.168.58.1  >> ~/.ssh/known_hosts"
+ssh 192.168.58.15 "ssh-keyscan -H 192.168.58.14  >> ~/.ssh/known_hosts"
 ssh -q 192.168.58.15 "cat ~/.ssh/id_rsa.pub" >> ~/.ssh/authorized_keys
 
 echo "----------------------------------------------------------------------"
