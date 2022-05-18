@@ -17,7 +17,7 @@ metadata:
   name: CLUSTERNAME
 compute:
 - name: worker
-  replicas: 3
+  replicas: 0
 controlPlane:
   name: master
   replicas: 3
