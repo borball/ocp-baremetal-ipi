@@ -11,7 +11,7 @@ keyfile /etc/chrony.keys
 leapsectz right/UTC
 logdir /var/log/chrony
 bindcmdaddress ::
-allow 192.168.10.0/24
+allow 192.168.58.0/25
 EOF
 
 systemctl enable chronyd --now
