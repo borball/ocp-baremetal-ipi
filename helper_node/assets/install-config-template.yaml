@@ -2,12 +2,17 @@ apiVersion: v1
 baseDomain: BASEDOMAIN
 networking:
   networkType: OVNKubernetes
-  machineCIDR: 192.168.58.0/24
+  machineNetwork:
+  - cidr: 192.168.58.0/24
+  - cidr: 2600:52:7:58::0/64
   clusterNetwork:
   - cidr: 10.128.0.0/14
     hostPrefix: 24
+  - cidr: fd01::/48
+    hostPrefix: 64
   serviceNetwork:
     - 172.30.0.0/16
+    - fd02::/112
 metadata:
   name: CLUSTERNAME
 compute:
