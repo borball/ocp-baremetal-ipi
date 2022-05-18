@@ -18,7 +18,7 @@ fi
 
 kcli delete vm ${cluster_name}-helper -y
 
-kcli delete network ${network_name} -y
+#kcli delete network ${network_name} -y
 
 
 
