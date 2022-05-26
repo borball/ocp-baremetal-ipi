@@ -78,5 +78,5 @@ systemctl daemon-reload
 
 systemctl enable dnsmasq-${cluster_name} --now
 
-echo "nameserver ${helper_node_ip}" > /etc/resolv.conf
+echo "nameserver ${helper_node_ip}" >> /etc/resolv.conf
 
