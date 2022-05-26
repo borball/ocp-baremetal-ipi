@@ -42,7 +42,7 @@ ssh -q ${helper_node_ip} "cat ~/.ssh/id_rsa.pub" >> ~/.ssh/authorized_keys
 
 echo "----------------------------------------------------------------------"
 echo
-echo "Now you will be sshing to helper node ${${helper_node_ip}}."
+echo "Now you will be sshing to helper node ${helper_node_ip}."
 echo "You can run commands below to start the OCP IPI deployment."
 echo
 echo "    cd /root/${cluster_name}-installer"
