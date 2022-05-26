@@ -28,7 +28,7 @@ ${BASEDIR}/01_create_virt_network.sh
 ${BASEDIR}/02_create_helper_vm.sh
 ${BASEDIR}/03_create_empty_vms.sh
 
-while [[ ! $(ssh -o BatchMode=yes -o ConnectTimeout=5 ${helper_node_ip} echo connected 2>&1) =~ "connected" ]]; do
+while [[ ! $(ssh -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=5 ${helper_node_ip} echo connected 2>&1) =~ "connected" ]]; do
 	sleep 5
 	echo "Waiting for helper node coming up..."
 done
