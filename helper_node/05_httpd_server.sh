@@ -18,7 +18,7 @@ Type=simple
 WorkingDirectory=/root
 TimeoutStartSec=300
 ExecStartPre=-/usr/bin/podman rm -f httpd
-ExecStart=/usr/bin/podman run --name httpd --hostname httpd --network=host -e  APACHE_HTTP_PORT_NUMBER=9000 -v /opt/httpd:/app:Z quay.io/bitnami/apache:latest
+ExecStart=/usr/bin/podman run --name httpd --hostname httpd --network=host -e  APACHE_HTTP_PORT_NUMBER=9000 -v /opt/httpd:/app:Z docker.io/bitnami/apache:latest
 ExecStop=-/usr/bin/podman rm -f httpd
 Restart=always
 RestartSec=30s
