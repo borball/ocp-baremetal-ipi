@@ -8,10 +8,10 @@ sed -i "s|EXTERNAL_BRIDGE|${network_name}|" ${INSTALL_CONFIG_FILE}
 sed -i "s|BASEDOMAIN|${base_domain}|" ${INSTALL_CONFIG_FILE}
 sed -i "s|CLUSTERNAME|${cluster_name}|" ${INSTALL_CONFIG_FILE}
 sed -i "s|MACHINECIDR|${network_subnet}|" ${INSTALL_CONFIG_FILE}
-sed -i "s|HYPERVISOR/${hypervisor}|" ${INSTALL_CONFIG_FILE}
-sed -i "s|HELPERNODE/${helper_node_ip}|" ${INSTALL_CONFIG_FILE}
-sed -i "s|APIVIP/${api_vip}|" ${INSTALL_CONFIG_FILE}
-sed -i "s|INGRESSVIP/${ingress_vip}|" ${INSTALL_CONFIG_FILE}
+sed -i "s|HYPERVISOR|${hypervisor}|" ${INSTALL_CONFIG_FILE}
+sed -i "s|HELPERNODE|${helper_node_ip}|" ${INSTALL_CONFIG_FILE}
+sed -i "s|APIVIP|${api_vip}|" ${INSTALL_CONFIG_FILE}
+sed -i "s|INGRESSVIP|${ingress_vip}|" ${INSTALL_CONFIG_FILE}
 
 # Get redfish endpoints for every node
 for node in master0 master1 master2
