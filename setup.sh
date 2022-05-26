@@ -28,21 +28,21 @@ ${BASEDIR}/01_create_virt_network.sh
 ${BASEDIR}/02_create_helper_vm.sh
 ${BASEDIR}/03_create_empty_vms.sh
 
-while [[ ! $(ssh -o BatchMode=yes -o ConnectTimeout=5 192.168.10.100 echo connected 2>&1) =~ "connected" ]]; do
+while [[ ! $(ssh -o BatchMode=yes -o ConnectTimeout=5 ${helper_node_ip} echo connected 2>&1) =~ "connected" ]]; do
 	sleep 5
 	echo "Waiting for helper node coming up..."
 done
 
 ${BASEDIR}/04_helper_node_files.sh
 
-ssh-keyscan -H 192.168.10.100 >> ~/.ssh/known_hosts
-ssh 192.168.10.100 "ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1"
-ssh 192.168.10.100 "ssh-keyscan -H 192.168.10.1  >> ~/.ssh/known_hosts"
-ssh -q 192.168.10.100 "cat ~/.ssh/id_rsa.pub" >> ~/.ssh/authorized_keys
+ssh-keyscan -H ${helper_node_ip} >> ~/.ssh/known_hosts
+ssh ${helper_node_ip} "ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1"
+ssh ${helper_node_ip} "ssh-keyscan -H ${hypervisor}  >> ~/.ssh/known_hosts"
+ssh -q ${helper_node_ip} "cat ~/.ssh/id_rsa.pub" >> ~/.ssh/authorized_keys
 
 echo "----------------------------------------------------------------------"
 echo
-echo "Now you will be sshing to helper node 192.168.10.100."
+echo "Now you will be sshing to helper node ${${helper_node_ip}}."
 echo "You can run commands below to start the OCP IPI deployment."
 echo
 echo "    cd /root/${cluster_name}-installer"
@@ -50,5 +50,5 @@ echo "    ./install.sh"
 echo
 echo "----------------------------------------------------------------------"
 
-ssh 192.168.10.100
+ssh ${helper_node_ip}
 
