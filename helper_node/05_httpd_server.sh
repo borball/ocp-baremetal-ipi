@@ -32,4 +32,5 @@ EOF
 
 systemctl daemon-reload
 systemctl enable podman-httpd --now
+sleep 2
 curl -v http://${helper_node_ip}:9000
