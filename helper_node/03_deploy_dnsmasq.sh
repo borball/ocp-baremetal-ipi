@@ -17,17 +17,17 @@ strict-order
 bind-dynamic
 bogus-priv
 dhcp-authoritative
-# DHCP Range ${cluster_name}
-dhcp-range=${cluster_name},${dhcp_range}
-dhcp-option=${cluster_name},option:dns-server,${dns_server}
-dhcp-option=${cluster_name},option:router,${network_gateway}
+# DHCP Range
+dhcp-range=${dhcp_range}
+dhcp-option=option:dns-server,${helper_node_ip}
+dhcp-option=option:router,${network_gateway}
 
 resolv-file=/opt/dnsmasq-${cluster_name}/upstream-resolv.conf
 except-interface=lo
 dhcp-lease-max=81
 log-dhcp
 
-domain=${cluster_name}.${base_domain},${network_subnet},local
+domain=${cluster_name}.${base_domain}
 
 # static host-records
 address=/apps.${cluster_name}.${base_domain}/${ingress_vip}
