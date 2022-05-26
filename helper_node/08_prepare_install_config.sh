@@ -7,6 +7,11 @@ INSTALL_CONFIG_FILE=${ASSETS_PATH}/install-config.yaml
 sed -i "s|EXTERNAL_BRIDGE|${network_name}|" ${INSTALL_CONFIG_FILE}
 sed -i "s|BASEDOMAIN|${base_domain}|" ${INSTALL_CONFIG_FILE}
 sed -i "s|CLUSTERNAME|${cluster_name}|" ${INSTALL_CONFIG_FILE}
+sed -i "s/MACHINECIDR/${network_subnet}/" ${INSTALL_CONFIG_FILE}
+sed -i "s/HYPERVISOR/${hypervisor}/" ${INSTALL_CONFIG_FILE}
+sed -i "s/HELPERNODE/${helper_node_ip}/" ${INSTALL_CONFIG_FILE}
+sed -i "s/APIVIP/${api_vip}/" ${INSTALL_CONFIG_FILE}
+sed -i "s/INGRESSVIP/${ingress_vip}/" ${INSTALL_CONFIG_FILE}
 
 # Get redfish endpoints for every node
 for node in master0 master1 master2
@@ -24,11 +29,7 @@ OPENSTACK_IMAGE_SHA256=$(${BIN_PATH}/openshift-baremetal-install coreos print-st
 # Qemu requires uncompressed sha
 QEMU_IMAGE_UNCOMPRESSED_SHA256=$(${BIN_PATH}/openshift-baremetal-install coreos print-stream-json | jq '.architectures.x86_64.artifacts.qemu.formats."qcow2.gz".disk."uncompressed-sha256"' | tr -d '"')
 
-sed -i "s/MACHINECIDR/${network_subnet}/" ${INSTALL_CONFIG_FILE}
-sed -i "s/HYPERVISOR/${hypervisor}/" ${INSTALL_CONFIG_FILE}
-sed -i "s/HELPERNODE/${helper_node_ip}/" ${INSTALL_CONFIG_FILE}
-sed -i "s/APIVIP/${api_vip}/" ${INSTALL_CONFIG_FILE}
-sed -i "s/INGRESSVIP/${ingress_vip}/" ${INSTALL_CONFIG_FILE}
+
 
 sed -i "s/QEMUIMAGE/${QEMU_IMAGE_FILE}?sha256=${QEMU_IMAGE_UNCOMPRESSED_SHA256}/" ${INSTALL_CONFIG_FILE}
 sed -i "s/OSTACKIMAGE/${OPENSTACK_IMAGE_FILE}?sha256=${OPENSTACK_IMAGE_SHA256}/" ${INSTALL_CONFIG_FILE}
