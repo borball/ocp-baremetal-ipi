@@ -5,7 +5,7 @@ BASEDIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 export OCP_RELEASE=$(oc version -o json  --client | jq -r '.releaseClientVersion')
 export LOCAL_REGISTRY=$(hostname -f):5000
 export LOCAL_REGISTRY_OLM=$(hostname -f):5000/olm
-export REGISTRY_AUTH_FILE=${BASEDIR}/pull_secret.json
+export REGISTRY_AUTH_FILE=${BASEDIR}/assets/pull_secret.json
 export REDHAT_DEFAULT_REGISTRY=registry.redhat.io
 export OCP_RELEASE_SHORT=${OCP_RELEASE%\.*}
 
